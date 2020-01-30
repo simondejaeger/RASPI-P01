@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
+import os
 import serial
 import datetime
 import time
 import signal
 import sys
 
-datetimeformat = "%Y-%m-%d %H:%M:%S"
+datetimeformat = "%Y-%m-%d_%H:%M:%S"
 
 def timestamp_to_date(now):
     """Fonction qui transforme une date de format <timestamp POSIX> en format <datetimeformat> (declare a la ligne 4).
@@ -29,9 +30,12 @@ working = True
 signal.signal(signal.SIGINT, signal_handler)
 with open(DATE+".txt","w")as file:
 
-
+	#usb = os.system('ls /dev/ | grep ttyU')
+	#print(str(usb))
+	texte=input("entrez nom, repas et boisson \n")
+	file.write(texte+'\n')
 	ser = serial.Serial(
-	 port='/dev/ttyACM0',
+	 port='/dev/ttyUSB0',
 	 baudrate = 9600,
 	 parity=serial.PARITY_NONE,
 	 stopbits=serial.STOPBITS_ONE,
@@ -44,10 +48,8 @@ with open(DATE+".txt","w")as file:
 
 	while working:
 	    x=ser.readline()
-	    print(x)
-
-	    file.write(str(x) + "\n")
-
+	    print(x.decode('utf-8'))
+	    file.write(x.decode('utf-8'))
 
 
 if working == False:
