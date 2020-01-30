@@ -1,0 +1,14 @@
+Description="Send the ip of the raspberry after the boot"
+
+Wants=network.target
+After=syslog.target network-online.target
+
+[Service]
+Type=simple
+ExecStart=python3 /home/pi/RASPI-P01/ip_at_start.py
+Restart=on-failure
+RestartSec=10
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
