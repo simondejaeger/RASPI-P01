@@ -3,6 +3,7 @@
 - sudo apt-get install git
 - git clone https://github.com/simondejaeger/RASPI-P01
 - sudo cp RASPI-P01/IP_AT_START.service /etc/systemd/system/
+- ouvrir ip_at_start.py ajouter infos manquantes mail rec mail env et mdp 
 - sudo systemctl daemon-reload
 - sudo systemctl enable IP_AT_START
 - sudo systemctl start IP_AT_START
