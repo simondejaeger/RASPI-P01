@@ -53,22 +53,24 @@ if __name__ == "__main__":
         while working:
             x = ser.readline().decode('utf-8')
             file.write(x)
+            print(x)
             x = x.split("\t")
-            drink.append(float(x[1]))
-            meal.append(float(x[4]))
-
-            if len(count) == 0:
-                count.append(0)
-            else:
-                count.append(count[-1] + 1)
+            if len(x) > 4:
+                drink.append(float(x[1]))
+                meal.append(float(x[4]))
+                if len(count) == 0:
+                    count.append(0)
+                else:
+                    count.append(count[-1] + 1)
 
     if not working:
         print("Plotting data")
+        plt.figure(figsize=(20,10))
         plt.plot(count, drink, linewidth=0.50, label='verre')
         plt.plot(count, meal, linewidth=0.50, label='assiete')
         plt.xlabel('time')
         plt.ylabel('poid')
-        plt.title("Simple Plot")
+        plt.title(texte)
         plt.legend()
         plt.savefig(DATE + '.png')
 
