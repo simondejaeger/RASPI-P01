@@ -4,6 +4,7 @@ import serial
 import datetime
 import time
 import signal
+import matplotlib.pyplot as plt
 
 datetimeformat = "%Y-%m-%d_%H:%M:%S"
 
@@ -22,7 +23,7 @@ def timestamp_to_date(now):
 
 
 def signal_handler(sig, frame):
-    print("ctrl-c catch")
+    print("End of the meal")
     global working
     working = False
 
@@ -32,10 +33,12 @@ if __name__ == "__main__":
     working = True
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTSTP, signal_handler)
+    drink = []
+    meal = []
+    count = []
 
     with open(DATE + ".txt", "w")as file:
-        # usb = os.system('ls /dev/ | grep ttyU')
-        # print(str(usb))
+
         texte = input("entrez nom, repas et boisson \n")
         file.write(texte + '\n')
         ser = serial.Serial(
@@ -46,12 +49,29 @@ if __name__ == "__main__":
             bytesize=serial.EIGHTBITS,
             timeout=1
         )
-        counter = 0
 
         while working:
-            x = ser.readline()
-            print(x.decode('utf-8'))
-            file.write(x.decode('utf-8'))
+            x = ser.readline().decode('utf-8')
+            file.write(x)
+            print(x)
+            x = x.split("\t")
+            if len(x) > 4:
+                drink.append(float(x[1]))
+                meal.append(float(x[4]))
+                if len(count) == 0:
+                    count.append(0)
+                else:
+                    count.append(count[-1] + 1)
 
     if not working:
-        print("exit")
+        print("Plotting data")
+        plt.figure(figsize=(20,10))
+        plt.plot(count, drink, linewidth=0.50, label='verre')
+        plt.plot(count, meal, linewidth=0.50, label='assiete')
+        plt.xlabel('time')
+        plt.ylabel('poid')
+        plt.title(texte)
+        plt.legend()
+        plt.savefig(DATE + '.png')
+
+
